@@ -1,4 +1,5 @@
 ﻿
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
@@ -52,7 +53,9 @@ namespace MyBot
             }
 
             var request = new RestRequest(url);
-            var response = await restClient.ExecuteGetTaskAsync(request);
+            Task<IRestResponse>  task = restClient.ExecuteTaskAsync(request);
+            task.Wait();
+            var response = await task;
             return response.Content;
         }
     }

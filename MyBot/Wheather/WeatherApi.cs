@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
@@ -16,11 +17,12 @@ namespace MyBot
 
         public async Task<string> GetWeatherInCityAsync(string city)
         {
-            city = city.Replace(city.Substring(0, 1), city.Substring(0, 1).ToUpperInvariant());
+            city = city.Substring(0, 1).ToUpper() + (city.Length > 1 ? city.Substring(1) : "");
             var url = FINAL_URL + city;
 
             var request = new RestRequest(url);
-            var response = await restClient.ExecuteGetTaskAsync(request);
+            var cancellationToken = new CancellationToken();
+            var response = await restClient.ExecuteTaskAsync(request, cancellationToken);
 
             var data = JsonConvert.DeserializeObject<WeatherData>(response.Content);
             string condition = data.Current.Condition.Text.ToLowerInvariant();

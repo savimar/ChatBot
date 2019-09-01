@@ -32,7 +32,7 @@ namespace MyBot
                     {
                         if (update?.CallbackQuery != null)
                         {
-                            if (update.CallbackQuery.Id == "старт")
+                            if (update.CallbackQuery.Data == "старт")
                             {
                                 await api.SendMessage("Поехали!", update.CallbackQuery.Message.Chat.Id, GetKeyboard(""));
                             }
