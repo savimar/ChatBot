@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyBot.Keyboad;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using TelegramBot.Keyboad;
 
-namespace MyBot
+namespace TelegramBot
 {
     public class Update
     {

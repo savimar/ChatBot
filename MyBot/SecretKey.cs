@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MyBot
+﻿
+namespace TelegramBot
 {
     public class SecretKey
     {
-        internal const string API_KEY = "tokin";
+        internal const string API_KEY = "token";
     }
 }

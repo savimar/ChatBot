@@ -1,12 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MyBot.Events
+namespace TelegramBot.Events
 {
     public class BotPublisher
     {
@@ -14,7 +10,7 @@ namespace MyBot.Events
 
         public async Task RunBot()
         {
-            var api = new TelegrammAPI();
+            var api = new TelegramAPI();
             while (true)
             {
                 try
@@ -34,8 +30,8 @@ namespace MyBot.Events
 
         private void OnRaiseBotEvent(BotEventArgs botEventArgs)
         {
-            EventHandler<BotEventArgs> handler = BotEvent;
-            handler(this, botEventArgs);
+            BotEvent?.Invoke(this, botEventArgs);
+
         }
     }
 }

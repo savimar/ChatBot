@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MyBot.Keyboad
+
+namespace TelegramBot.Keyboad
 {
     public class CallbackQuery
     {

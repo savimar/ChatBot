@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace MyBot
+namespace TelegramBot
 {
     public class Current
     {

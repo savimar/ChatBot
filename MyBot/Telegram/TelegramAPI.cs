@@ -1,46 +1,43 @@
-﻿
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 
 
-namespace MyBot
+namespace TelegramBot
 {
-    public class TelegrammAPI
+    public class TelegramAPI
     {
         private const string API_URL = @"https://api.telegram.org/bot" + SecretKey.API_KEY + "/";
         RestClient restClient = new RestClient();
-        private long lastUpdateId = 0;
+        private long _lastUpdateId;
 
 
         public async Task<Update[]> GeUpdatesAsync()
         {
-            var json = await SendApiRequest("getUpdates", "offset=" + lastUpdateId);
+            var json = await SendApiRequestAsync("getUpdates", "offset=" + _lastUpdateId);
             ApiResult apiResult = JsonConvert.DeserializeObject<ApiResult>(json);
             var updates = apiResult?.Result;
             if (apiResult != null && updates.Length > 0)
             {
-                lastUpdateId = updates[updates.Length - 1].UpdateId + 1;
+                _lastUpdateId = updates[updates.Length - 1].UpdateId + 1;
             }
 
             return apiResult?.Result;
         }
 
 
-        public async Task SendMessage(string text, long chatId, string keyboard)
+        public async Task SendMessageAsync(string text, long chatId, string keyboard)
         {
-            await SendApiRequest("sendMessage", $"chat_id={chatId} &text={text}&reply_markup={keyboard}");
+            await SendApiRequestAsync("sendMessage", $"chat_id={chatId} &text={text}&reply_markup={keyboard}");
+        }
+
+        public async Task SendPhotoAsync(long chatId, string photo, string caption)
+        {
+            await SendApiRequestAsync("sendPhoto", $"chat_id={chatId} &photo={photo}&caption={caption}");
         }
 
 
-        public async Task SendPhoto(long chatId, string photo, string caption)
-        {
-            await SendApiRequest("sendPhoto", $"chat_id={chatId} &photo={photo}&caption={caption}");
-        }
-
-
-        private async Task<string> SendApiRequest(string apiMethod, string parameters)
+        private async Task<string> SendApiRequestAsync(string apiMethod, string parameters)
         {
             string url;
             if (parameters == "offset=0")

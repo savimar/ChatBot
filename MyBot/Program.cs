@@ -1,6 +1,6 @@
-﻿using MyBot.Events;
+﻿using TelegramBot.Events;
 
-namespace MyBot
+namespace TelegramBot
 {
     public class Program
     {

@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace MyBot.Events
+namespace TelegramBot.Events
 {
     public class BotSuscriber
     {
@@ -22,7 +21,7 @@ namespace MyBot.Events
             var data = File.ReadAllText(
               Directory.GetCurrentDirectory() + @"\SolutionItems\answers.json");
             var questions = JsonConvert.DeserializeObject<Dictionary<string, string>>(data);
-            var api = new TelegrammAPI();
+            var api = new TelegramAPI();
 
             foreach (var update in e.Updates)
             {
@@ -30,18 +29,18 @@ namespace MyBot.Events
                 {
                     if (update.CallbackQuery.Data == "старт")
                     {
-                        await api.SendMessage("Поехали!", update.CallbackQuery.Message.Chat.Id, GetKeyboard(""));
+                        await api.SendMessageAsync("Поехали!", update.CallbackQuery.Message.Chat.Id, GetKeyboard(""));
                     }
                 }
                 else
                 {
                     var question = update?.Message?.Text;
-                    var answer = AnswerQuestion(question, questions);
-                    await api.SendMessage(answer.Result, update.Message.Chat.Id, GetKeyboard(question.ToLowerInvariant()));
+                    var answer = await AnswerQuestionAsync(question, questions);
+                    await api.SendMessageAsync(answer, update.Message.Chat.Id, GetKeyboard(question?.ToLowerInvariant()));
                 }
             }
         }
-        private static string GetKeyboard(string question)
+        private string GetKeyboard(string question)
         {
 
             if (question == "/start" || question == "начать")
@@ -68,7 +67,7 @@ namespace MyBot.Events
 
         }
 
-        private async static Task<string> AnswerQuestion(string userQuestion, Dictionary<string, string> questions)
+        private async Task<string> AnswerQuestionAsync(string userQuestion, Dictionary<string, string> questions)
         {
             List<string> answers = new List<string>();
             userQuestion = userQuestion.ToLowerInvariant();
@@ -84,7 +83,7 @@ namespace MyBot.Events
                 {
                     try
                     {
-                        await GetStartMessage(answers);
+                        await GetStartMessageAsync(answers);
                     }
                     catch (Exception e)
                     {
@@ -142,9 +141,9 @@ namespace MyBot.Events
             return String.Join(", ", answers);
         }
 
-        private static async Task GetStartMessage(List<string> answers)
+        private async Task GetStartMessageAsync(List<string> answers)
         {
-            var api = new TelegrammAPI();
+            var api = new TelegramAPI();
             string photo = WebUtility.UrlEncode("https://pickasso.info/image/EGDzy");
             var updates = await api.GeUpdatesAsync();
             if (updates.Length > 0)
@@ -155,7 +154,7 @@ namespace MyBot.Events
                 if (!answers.Contains(text))
                 {
                     long chatId = updates[0].Message.Chat.Id;
-                    await api.SendPhoto(chatId, photo, firstName + ", здравствуйте!");
+                    await api.SendPhotoAsync(chatId, photo, firstName + ", здравствуйте!");
                     answers.Add(text);
                 }
             }

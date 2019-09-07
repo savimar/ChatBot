@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MyBot
+
+namespace TelegramBot
 {
-   
+
     public class BotEventArgs : EventArgs
     {
+        public Update[] Updates { get; set; }
+
         public BotEventArgs(Update[] updates)
         {
             Updates = updates;
         }
-        public Update[] Updates { get; set; }
+
     }
 }

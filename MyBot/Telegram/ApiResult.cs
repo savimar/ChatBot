@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
-namespace MyBot
+namespace TelegramBot
 {
     class ApiResult
     {
