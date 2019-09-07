@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyBot
 {
-   public class Message
+    public class Message
     {
         [JsonProperty("chat")]
         public Chat Chat { get; set; }

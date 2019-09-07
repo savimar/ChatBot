@@ -5,10 +5,11 @@ using System.Text;
 
 namespace MyBot.Keyboad
 {
-   public class CallbackQuery
+    public class CallbackQuery
     {
         [JsonProperty("id")]
         public string Id { get; set; }
+
         [JsonProperty("from")]
         public User From { get; set; }
 

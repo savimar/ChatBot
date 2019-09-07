@@ -40,7 +40,7 @@ namespace MyBot
         }
 
 
-        public async Task<string> SendApiRequest(string apiMethod, string parameters)
+        private async Task<string> SendApiRequest(string apiMethod, string parameters)
         {
             string url;
             if (parameters == "offset=0")
@@ -53,7 +53,7 @@ namespace MyBot
             }
 
             var request = new RestRequest(url);
-            Task<IRestResponse>  task = restClient.ExecuteTaskAsync(request);
+            Task<IRestResponse> task = restClient.ExecuteTaskAsync(request);
             task.Wait();
             var response = await task;
             return response.Content;

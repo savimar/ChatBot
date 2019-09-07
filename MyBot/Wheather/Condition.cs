@@ -7,6 +7,5 @@ namespace MyBot
     public class Condition
     {
         public string Text { get; set; }
-
     }
 }

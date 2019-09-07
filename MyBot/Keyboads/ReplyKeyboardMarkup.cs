@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyBot
 {
-   public class ReplyKeyboardMarkup : IKeyboardMarkup
+    public class ReplyKeyboardMarkup : IKeyboardMarkup
     {
         [JsonProperty("keyboard")]
         public KeyboardButton[][] Keyboard { get; set; }

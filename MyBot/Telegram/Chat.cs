@@ -5,14 +5,12 @@ using System.Text;
 
 namespace MyBot
 {
-   public class User
+    public class Chat
     {
         public long Id { get; set; }
-        [JsonProperty("first_name")]
 
+        [JsonProperty("first_name")]
         public string FirstName { get; set; }
 
-        [JsonProperty("username")]
-        public string Username { get; set; }
     }
 }

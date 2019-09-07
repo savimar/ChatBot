@@ -12,7 +12,7 @@ namespace MyBot
         public long UpdateId { get; set; }
 
         [JsonProperty("message")]
-        public  Message Message { get; set; }
+        public Message Message { get; set; }
 
         [JsonProperty("callback_query")]
         public CallbackQuery CallbackQuery { get; set; }

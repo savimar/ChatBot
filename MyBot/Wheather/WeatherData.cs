@@ -7,6 +7,5 @@ namespace MyBot
     public class WeatherData
     {
         public Current Current { get; set; }
-
     }
 }

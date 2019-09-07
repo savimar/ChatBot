@@ -10,15 +10,15 @@ namespace MyBot
         [JsonProperty("text")]
         public string Text { get; set; }
 
-        
+
         [JsonProperty("callback_data")]
         public string CallbackData { get; set; }
-        
+
 
         public InlineKeyboardButton(string text, string callbackData)
         {
-            this.Text = text;
-            this.CallbackData = callbackData;
+            Text = text;
+            CallbackData = callbackData;
         }
     }
 }

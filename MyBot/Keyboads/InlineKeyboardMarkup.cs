@@ -5,11 +5,9 @@ using System.Text;
 
 namespace MyBot
 {
-   public class InlineKeyboardMarkup : IKeyboardMarkup
+    public class InlineKeyboardMarkup : IKeyboardMarkup
     {
         [JsonProperty("inline_keyboard")]
         public InlineKeyboardButton[][] Keyboard { get; set; }
-
-        
     }
 }

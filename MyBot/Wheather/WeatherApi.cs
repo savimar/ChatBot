@@ -21,12 +21,11 @@ namespace MyBot
             var url = FINAL_URL + city;
 
             var request = new RestRequest(url);
-            var cancellationToken = new CancellationToken();
-            var response = await restClient.ExecuteTaskAsync(request, cancellationToken);
+            var response = await restClient.ExecuteTaskAsync(request, new CancellationToken());
 
             var data = JsonConvert.DeserializeObject<WeatherData>(response.Content);
-            string condition = data.Current.Condition.Text.ToLowerInvariant();
-            int temp = (int)data.Current.TempC;
+            string condition = data?.Current?.Condition?.Text.ToLowerInvariant();
+            int temp = (int)data?.Current?.TempC;
             return $"В городе {city} сейчас {condition}, {temp} градусов";
         }
     }
