@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using ApiAiSDK;
 
 namespace TelegramBot.Events
 {
@@ -18,9 +19,8 @@ namespace TelegramBot.Events
 
         async void HandleBotEventAsync(object sender, BotEventArgs e)
         {
-            var data = File.ReadAllText(
-              Directory.GetCurrentDirectory() + @"\SolutionItems\answers.json");
-            var questions = JsonConvert.DeserializeObject<Dictionary<string, string>>(data);
+            AIConfiguration config = new AIConfiguration("dialogflow.com", SupportedLanguage.Russian);
+            var _apiAi = new ApiAi(config);
             var api = new TelegramAPI();
 
             foreach (var update in e.Updates)
@@ -35,7 +35,7 @@ namespace TelegramBot.Events
                 else
                 {
                     var question = update?.Message?.Text;
-                    var answer = await AnswerQuestionAsync(question, questions);
+                    var answer = await AnswerQuestionAsync(question, _apiAi);
                     await api.SendMessageAsync(answer, update.Message.Chat.Id, GetKeyboard(question?.ToLowerInvariant()));
                 }
             }
@@ -67,76 +67,76 @@ namespace TelegramBot.Events
 
         }
 
-        private async Task<string> AnswerQuestionAsync(string userQuestion, Dictionary<string, string> questions)
+        private async Task<string> AnswerQuestionAsync(string userQuestion, ApiAi apiAi)
         {
             List<string> answers = new List<string>();
             userQuestion = userQuestion.ToLowerInvariant();
 
-            foreach (var question in questions)
-            {
-                if (userQuestion.Contains(question.Key))
-                {
-                    answers.Add(question.Value);
-                }
+               if (userQuestion == "/start" || userQuestion == "начать")
+               {
+                   try
+                   {
+                       await GetStartMessageAsync(answers);
+                   }
+                   catch (Exception e)
+                   {
+                       Console.WriteLine(e);
+                   }
+               }
 
-                if (userQuestion == "/start" || userQuestion == "начать")
-                {
-                    try
-                    {
-                        await GetStartMessageAsync(answers);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
+               if (userQuestion.Contains("сколько времени"))
+               {
+                   var time = DateTime.Now.ToString("HH:mm");
+                   string timeString = $"Точное время: {time}";
+                   if (!answers.Contains(timeString))
+                   {
+                       answers.Add(timeString);
+                   }
+               }
 
-                if (userQuestion.Contains("сколько времени"))
-                {
-                    var time = DateTime.Now.ToString("HH:mm");
-                    string timeString = $"Точное время: {time}";
-                    if (!answers.Contains(timeString))
-                    {
-                        answers.Add(timeString);
-                    }
-                }
+               if (userQuestion.Contains("какой сегодня день"))
+               {
+                   var date = DateTime.Now.ToString("dd.MM.yyyy");
+                   string dateString = $"Сегодня: {date}";
+                   if (!answers.Contains(dateString))
+                   {
+                       answers.Add(dateString);
+                   }
+               }
 
-                if (userQuestion.Contains("какой сегодня день"))
-                {
-                    var date = DateTime.Now.ToString("dd.MM.yyyy");
-                    string dateString = $"Сегодня: {date}";
-                    if (!answers.Contains(dateString))
-                    {
-                        answers.Add(dateString);
-                    }
-                }
+               if (userQuestion.StartsWith("какая погода в городе"))
+               {
+                   var words = userQuestion.Split(' ');
+                   var city = words[words.Length - 1];
+                   var weatherApi = new WeatherApi();
+                   var forecast = await weatherApi.GetWeatherInCityAsync(city);
+                   if (!answers.Contains(forecast))
+                   {
+                       answers.Add(forecast);
+                   }
+               }
 
-                if (userQuestion.StartsWith("какая погода в городе"))
-                {
-                    var words = userQuestion.Split(' ');
-                    var city = words[words.Length - 1];
-                    var weatherApi = new WeatherApi();
-                    var forecast = await weatherApi.GetWeatherInCityAsync(city);
-                    if (!answers.Contains(forecast))
-                    {
-                        answers.Add(forecast);
-                    }
-                }
-
-                if (userQuestion == "цитата")
-                {
-                    var quoteApi = new QuoteApi();
-                    string quote = await quoteApi.GetQuote();
-                    if (!answers.Contains(quote))
-                    {
-                        answers.Add(quote);
-                    }
-                }
-            }
+               if (userQuestion == "цитата")
+               {
+                   var quoteApi = new QuoteApi();
+                   string quote = await quoteApi.GetQuote();
+                   if (!answers.Contains(quote))
+                   {
+                       answers.Add(quote);
+                   }
+               }
+            
 
             if (answers.Count == 0)
             {
-                answers.Add("я тебя не понимаю");
+                var response = apiAi.TextRequest(userQuestion);
+                string answer = response.Result.Fulfillment.Speech;
+                if (String.IsNullOrEmpty(answer))
+                {
+                    answer = "Прости, я тебя не понимаю";
+
+                }
+                answers.Add(answer);
             }
             return String.Join(", ", answers);
         }
@@ -150,7 +150,7 @@ namespace TelegramBot.Events
             {
                 string firstName = updates[0].Message.Chat.FirstName;
                 string text = "Мы рады видеть Вас, " + firstName +
-                              ", в нашем боте-помощнике. Вы можете здесь узнать какая погода, набрав в поле сообщений \"Какая погода в городе (далее город в именительном падеже)\", узнать какой сегодня день, точное время, получить случайную цитату или просто пообщаться с ботом по кнопкам клавиатуры";
+                              ", в нашем боте-помощнике. Вы можете здесь узнать какая погода, набрав в поле сообщений \"Какая погода в городе (далее город в именительном падеже)\", узнать какой сегодня день, точное время, получить случайную цитату или просто пообщаться с ботом по кнопкам клавиатуры или введите свое сообщениме в поле сообщений";
                 if (!answers.Contains(text))
                 {
                     long chatId = updates[0].Message.Chat.Id;

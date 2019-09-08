@@ -8,7 +8,7 @@ namespace TelegramBot
     public class WeatherApi
     {
         private const string API_URL = "http://api.apixu.com/v1/current.json";
-        private const string API_KEY = "api.apixu";
+        private const string API_KEY = "apixu.com";
         private const string FINAL_URL = API_URL + "?key=" + API_KEY + "&lang=ru&q=";
         private RestClient restClient = new RestClient();
 
