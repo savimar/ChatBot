@@ -1,6 +1,6 @@
-﻿using TelegramBot.Events;
+﻿using MyBot.Events;
 
-namespace TelegramBot
+namespace MyBot
 {
     public class Program
     {
@@ -9,9 +9,6 @@ namespace TelegramBot
             var publisher = new BotPublisher();
             var subscriber = new BotSuscriber("subscriber", publisher);
             publisher.RunBot();
-
         }
-
-
     }
 }

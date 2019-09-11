@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using MyBot.Telegram;
 
-namespace TelegramBot.Events
+namespace MyBot.Events
 {
     public class BotPublisher
     {
@@ -10,7 +10,7 @@ namespace TelegramBot.Events
 
         public async Task RunBot()
         {
-            var api = new TelegramAPI();
+            var api = new TelegramApi();
             while (true)
             {
                 try
@@ -28,10 +28,9 @@ namespace TelegramBot.Events
             }
         }
 
-        private void OnRaiseBotEvent(BotEventArgs botEventArgs)
+        public void OnRaiseBotEvent(BotEventArgs botEventArgs)
         {
             BotEvent?.Invoke(this, botEventArgs);
-
         }
     }
 }

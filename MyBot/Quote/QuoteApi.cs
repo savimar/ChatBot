@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 
-namespace TelegramBot
+namespace MyBot.Quote
 {
-    class QuoteApi
+    public class QuoteApi
     {
-        private const string API_URL = @"https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru";
+        public const string API_URL = @"https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru";
         private RestClient restClient = new RestClient();
 
         public async Task<string> GetQuote()
@@ -22,6 +22,7 @@ namespace TelegramBot
             {
                 data.QuoteAuthor = "неизвестен";
             }
+
             return $"Случайная цитата: \n \"{data.QuoteText}\" \n Автор: {data.QuoteAuthor}";
         }
     }

@@ -1,7 +1,6 @@
-﻿
-namespace TelegramBot
+﻿namespace MyBot.Keyboads
 {
-   public interface IKeyboardMarkup
+    public interface IKeyboardMarkup
     {
     }
 }

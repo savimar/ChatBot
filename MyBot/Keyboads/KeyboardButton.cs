@@ -1,12 +1,10 @@
 ﻿using Newtonsoft.Json;
 
-
-namespace TelegramBot
+namespace MyBot.Keyboads
 {
     public class KeyboardButton
     {
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        [JsonProperty("text")] public string Text { get; set; }
 
         public KeyboardButton(string text)
         {

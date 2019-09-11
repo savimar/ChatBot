@@ -1,5 +1,4 @@
-﻿
-namespace TelegramBot
+﻿namespace MyBot
 {
     public class SecretKey
     {

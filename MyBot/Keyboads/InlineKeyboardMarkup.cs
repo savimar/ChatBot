@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-
-namespace TelegramBot
+namespace MyBot.Keyboads
 {
     public class InlineKeyboardMarkup : IKeyboardMarkup
     {
-        [JsonProperty("inline_keyboard")]
-        public InlineKeyboardButton[][] Keyboard { get; set; }
+        [JsonProperty("inline_keyboard")] public InlineKeyboardButton[][] Keyboard { get; set; }
     }
 }

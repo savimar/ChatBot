@@ -2,13 +2,12 @@
 using Newtonsoft.Json;
 using RestSharp;
 
-
-namespace TelegramBot
+namespace MyBot.Telegram
 {
-    public class TelegramAPI
+    public class TelegramApi
     {
-        private const string API_URL = @"https://api.telegram.org/bot" + SecretKey.API_KEY + "/";
-        RestClient restClient = new RestClient();
+        public const string API_URL = @"https://api.telegram.org/bot" + SecretKey.API_KEY + "/";
+        private readonly RestClient _restClient = new RestClient();
         private long _lastUpdateId;
 
 
@@ -50,7 +49,7 @@ namespace TelegramBot
             }
 
             var request = new RestRequest(url);
-            Task<IRestResponse> task = restClient.ExecuteTaskAsync(request);
+            Task<IRestResponse> task = _restClient.ExecuteTaskAsync(request);
             task.Wait();
             var response = await task;
             return response.Content;

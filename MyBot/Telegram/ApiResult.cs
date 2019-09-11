@@ -1,8 +1,6 @@
-﻿
-
-namespace TelegramBot
+﻿namespace MyBot.Telegram
 {
-    class ApiResult
+    public class ApiResult
     {
         public Update[] Result { get; set; }
     }

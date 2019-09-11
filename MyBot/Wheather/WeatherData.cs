@@ -1,5 +1,4 @@
-﻿
-namespace TelegramBot
+﻿namespace MyBot.Wheather
 {
     public class WeatherData
     {

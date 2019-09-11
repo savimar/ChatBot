@@ -1,8 +1,6 @@
-﻿
-
-namespace TelegramBot
+﻿namespace MyBot.Quote
 {
-    class QuoteData
+    public class QuoteData
     {
         public string QuoteText { get; set; }
 

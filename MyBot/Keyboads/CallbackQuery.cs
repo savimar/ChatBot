@@ -1,22 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using MyBot.Telegram;
+using Newtonsoft.Json;
 
-
-namespace TelegramBot.Keyboad
+namespace MyBot.Keyboads
 {
     public class CallbackQuery
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
 
-        [JsonProperty("from")]
-        public User From { get; set; }
+        [JsonProperty("from")] public User From { get; set; }
 
-        [JsonProperty("message")]
-        public Message Message { get; set; }
+        [JsonProperty("message")] public Message Message { get; set; }
 
-        [JsonProperty("data")]
-        public string Data { get; set; }
-
-
+        [JsonProperty("data")] public string Data { get; set; }
     }
 }

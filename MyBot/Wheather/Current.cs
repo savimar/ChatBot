@@ -1,13 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace TelegramBot
+namespace MyBot.Wheather
 {
     public class Current
     {
-        [JsonProperty("condition")]
-        public Condition Condition { get; set; }
+        [JsonProperty("condition")] public Condition Condition { get; set; }
 
-        [JsonProperty("temp_c")]
-        public double TempC { get; set; }
+        [JsonProperty("temp_c")] public double TempC { get; set; }
     }
 }

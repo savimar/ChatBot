@@ -1,16 +1,20 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using ApiAiSDK;
+using MyBot.Keyboads;
+using MyBot.Quote;
+using MyBot.Telegram;
+using MyBot.Wheather;
+using Newtonsoft.Json;
 
-namespace TelegramBot.Events
+namespace MyBot.Events
 {
     public class BotSuscriber
     {
         private string id;
+
         public BotSuscriber(string id, BotPublisher publisher)
         {
             this.id = id;
@@ -19,9 +23,7 @@ namespace TelegramBot.Events
 
         async void HandleBotEventAsync(object sender, BotEventArgs e)
         {
-            AIConfiguration config = new AIConfiguration("dialogflow.com", SupportedLanguage.Russian);
-            var _apiAi = new ApiAi(config);
-            var api = new TelegramAPI();
+            var api = new TelegramApi();
 
             foreach (var update in e.Updates)
             {
@@ -35,20 +37,21 @@ namespace TelegramBot.Events
                 else
                 {
                     var question = update?.Message?.Text;
-                    var answer = await AnswerQuestionAsync(question, _apiAi);
-                    await api.SendMessageAsync(answer, update.Message.Chat.Id, GetKeyboard(question?.ToLowerInvariant()));
+                    var answer = await AnswerQuestionAsync(question);
+                    await api.SendMessageAsync(answer, update.Message.Chat.Id,
+                        GetKeyboard(question?.ToLowerInvariant()));
                 }
             }
         }
-        private string GetKeyboard(string question)
-        {
 
+        public string GetKeyboard(string question)
+        {
             if (question == "/start" || question == "начать")
             {
                 var keyboardMarkup = new InlineKeyboardMarkup();
                 keyboardMarkup.Keyboard = new InlineKeyboardButton[][]
                 {
-                   new InlineKeyboardButton[] { new InlineKeyboardButton("Старт", "старт") }
+                    new InlineKeyboardButton[] {new InlineKeyboardButton("Старт", "старт")}
                 };
                 return JsonConvert.SerializeObject(keyboardMarkup);
             }
@@ -58,74 +61,75 @@ namespace TelegramBot.Events
 
                 keyboardMarkup.Keyboard = new KeyboardButton[][]
                 {
-                           new KeyboardButton[] { new KeyboardButton("Привет"), new KeyboardButton("Как дела") },
-                           new KeyboardButton[] { new KeyboardButton("Сколько времени"), new KeyboardButton("Цитата") },
-                           new KeyboardButton[] { new KeyboardButton("Какой сегодня день") }
+                    new KeyboardButton[] {new KeyboardButton("Привет"), new KeyboardButton("Как дела")},
+                    new KeyboardButton[] {new KeyboardButton("Сколько времени"), new KeyboardButton("Цитата")},
+                    new KeyboardButton[] {new KeyboardButton("Какой сегодня день")}
                 };
                 return JsonConvert.SerializeObject(keyboardMarkup);
             }
-
         }
 
-        private async Task<string> AnswerQuestionAsync(string userQuestion, ApiAi apiAi)
+        public async Task<string> AnswerQuestionAsync(string userQuestion)
         {
+            AIConfiguration config = new AIConfiguration("dialogflow.com", SupportedLanguage.Russian);
+            var apiAi = new ApiAi(config);
             List<string> answers = new List<string>();
             userQuestion = userQuestion.ToLowerInvariant();
 
-               if (userQuestion == "/start" || userQuestion == "начать")
-               {
-                   try
-                   {
-                       await GetStartMessageAsync(answers);
-                   }
-                   catch (Exception e)
-                   {
-                       Console.WriteLine(e);
-                   }
-               }
+            if (userQuestion == "/start" || userQuestion == "начать")
+            {
+                try
+                {
+                    await GetStartMessageAsync(answers);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
 
-               if (userQuestion.Contains("сколько времени"))
-               {
-                   var time = DateTime.Now.ToString("HH:mm");
-                   string timeString = $"Точное время: {time}";
-                   if (!answers.Contains(timeString))
-                   {
-                       answers.Add(timeString);
-                   }
-               }
+            if (userQuestion.Contains("сколько времени"))
+            {
+                var time = DateTime.Now.ToString("HH:mm");
+                string timeString = $"Точное время: {time}";
+                if (!answers.Contains(timeString))
+                {
+                    answers.Add(timeString);
+                }
+            }
 
-               if (userQuestion.Contains("какой сегодня день"))
-               {
-                   var date = DateTime.Now.ToString("dd.MM.yyyy");
-                   string dateString = $"Сегодня: {date}";
-                   if (!answers.Contains(dateString))
-                   {
-                       answers.Add(dateString);
-                   }
-               }
+            if (userQuestion.Contains("какой сегодня день"))
+            {
+                var date = DateTime.Now.ToString("dd.MM.yyyy");
+                string dateString = $"Сегодня: {date}";
+                if (!answers.Contains(dateString))
+                {
+                    answers.Add(dateString);
+                }
+            }
 
-               if (userQuestion.StartsWith("какая погода в городе"))
-               {
-                   var words = userQuestion.Split(' ');
-                   var city = words[words.Length - 1];
-                   var weatherApi = new WeatherApi();
-                   var forecast = await weatherApi.GetWeatherInCityAsync(city);
-                   if (!answers.Contains(forecast))
-                   {
-                       answers.Add(forecast);
-                   }
-               }
+            if (userQuestion.StartsWith("какая погода в городе"))
+            {
+                var words = userQuestion.Split(' ');
+                var city = words[words.Length - 1];
+                var weatherApi = new WeatherApi();
+                var forecast = await weatherApi.GetWeatherInCityAsync(city);
+                if (!answers.Contains(forecast))
+                {
+                    answers.Add(forecast);
+                }
+            }
 
-               if (userQuestion == "цитата")
-               {
-                   var quoteApi = new QuoteApi();
-                   string quote = await quoteApi.GetQuote();
-                   if (!answers.Contains(quote))
-                   {
-                       answers.Add(quote);
-                   }
-               }
-            
+            if (userQuestion == "цитата")
+            {
+                var quoteApi = new QuoteApi();
+                string quote = await quoteApi.GetQuote();
+                if (!answers.Contains(quote))
+                {
+                    answers.Add(quote);
+                }
+            }
+
 
             if (answers.Count == 0)
             {
@@ -134,16 +138,17 @@ namespace TelegramBot.Events
                 if (String.IsNullOrEmpty(answer))
                 {
                     answer = "Прости, я тебя не понимаю";
-
                 }
+
                 answers.Add(answer);
             }
+
             return String.Join(", ", answers);
         }
 
         private async Task GetStartMessageAsync(List<string> answers)
         {
-            var api = new TelegramAPI();
+            var api = new TelegramApi();
             string photo = WebUtility.UrlEncode("https://pickasso.info/image/EGDzy");
             var updates = await api.GeUpdatesAsync();
             if (updates.Length > 0)
@@ -161,4 +166,3 @@ namespace TelegramBot.Events
         }
     }
 }
-

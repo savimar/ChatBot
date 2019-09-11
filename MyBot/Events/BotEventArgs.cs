@@ -1,9 +1,8 @@
 ﻿using System;
+using MyBot.Telegram;
 
-
-namespace TelegramBot
+namespace MyBot.Events
 {
-
     public class BotEventArgs : EventArgs
     {
         public Update[] Updates { get; set; }
@@ -12,6 +11,5 @@ namespace TelegramBot
         {
             Updates = updates;
         }
-
     }
 }
