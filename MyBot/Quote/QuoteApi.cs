@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
 
+[assembly: InternalsVisibleTo("MyBot.xUnit.Tests")]
+
 namespace MyBot.Quote
 {
     public class QuoteApi
     {
-        public const string API_URL = @"https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru";
+        internal const string API_URL = @"https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=ru";
         private RestClient restClient = new RestClient();
 
-        public async Task<string> GetQuote()
+        internal async Task<string> GetQuote()
         {
             var request = new RestRequest(API_URL);
             var cancellationToken = new CancellationToken();

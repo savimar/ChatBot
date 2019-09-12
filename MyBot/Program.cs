@@ -7,7 +7,9 @@ namespace MyBot
         public static void Main(string[] args)
         {
             var publisher = new BotPublisher();
-            var subscriber = new BotSuscriber("subscriber", publisher);
+            var subscriber = new BotSuscriber("subscriber");
+            var service = new BotService(publisher, subscriber);
+
             publisher.RunBot();
         }
     }

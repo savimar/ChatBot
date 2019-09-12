@@ -1,13 +1,15 @@
 using System;
 using ApiAiSDK;
+using Moq;
 using MyBot.Events;
+using MyBot.Telegram;
 using Xunit;
 
 namespace MyBot.xUnit.Tests
 {
     public class BotSuscriberTests
     {
-        private readonly BotSuscriber _suscriber = new BotSuscriber("test", new BotPublisher());
+        private readonly BotSuscriber _suscriber = new BotSuscriber("test");
 
         [Fact]
         public void GetKeyboard_Positive_Start_Test()

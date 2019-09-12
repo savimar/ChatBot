@@ -10,5 +10,14 @@ namespace MyBot.Telegram
         [JsonProperty("message")] public Message Message { get; set; }
 
         [JsonProperty("callback_query")] public CallbackQuery CallbackQuery { get; set; }
+
+        public Update()
+        {
+        }
+
+        public Update(long updateId)
+        {
+            UpdateId = updateId;
+        }
     }
 }

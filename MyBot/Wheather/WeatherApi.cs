@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
+
+[assembly: InternalsVisibleTo("MyBot.xUnit.Tests")]
 
 namespace MyBot.Wheather
 {
@@ -10,10 +13,10 @@ namespace MyBot.Wheather
     {
         private const string API_URL = "http://api.apixu.com/v1/current.json";
         private const string API_KEY = "apixu.com";
-        public const string FINAL_URL = API_URL + "?key=" + API_KEY + "&lang=ru&q=";
+        internal const string FINAL_URL = API_URL + "?key=" + API_KEY + "&lang=ru&q=";
         private readonly RestClient _restClient = new RestClient();
 
-        public async Task<string> GetWeatherInCityAsync(string city)
+        internal async Task<string> GetWeatherInCityAsync(string city)
         {
             try
             {

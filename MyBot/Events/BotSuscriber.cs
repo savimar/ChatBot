@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ApiAiSDK;
 using MyBot.Keyboads;
@@ -9,23 +11,22 @@ using MyBot.Telegram;
 using MyBot.Wheather;
 using Newtonsoft.Json;
 
+[assembly: InternalsVisibleTo("MyBot.xUnit.Tests")]
+
 namespace MyBot.Events
 {
-    public class BotSuscriber
+    public class BotSuscriber : IBotSuscriber
     {
-        private string id;
+        private string _id;
 
-        public BotSuscriber(string id, BotPublisher publisher)
+        public BotSuscriber(string id)
         {
-            this.id = id;
-            publisher.BotEvent += HandleBotEventAsync;
+            _id = id;
         }
 
-        async void HandleBotEventAsync(object sender, BotEventArgs e)
+        public async Task SendMessageToTelegramAsync(Update[] updates, TelegramApi api)
         {
-            var api = new TelegramApi();
-
-            foreach (var update in e.Updates)
+            foreach (var update in updates)
             {
                 if (update?.CallbackQuery != null)
                 {
@@ -44,7 +45,8 @@ namespace MyBot.Events
             }
         }
 
-        public string GetKeyboard(string question)
+
+        internal string GetKeyboard(string question)
         {
             if (question == "/start" || question == "начать")
             {
@@ -69,7 +71,7 @@ namespace MyBot.Events
             }
         }
 
-        public async Task<string> AnswerQuestionAsync(string userQuestion)
+        internal async Task<string> AnswerQuestionAsync(string userQuestion)
         {
             AIConfiguration config = new AIConfiguration("dialogflow.com", SupportedLanguage.Russian);
             var apiAi = new ApiAi(config);

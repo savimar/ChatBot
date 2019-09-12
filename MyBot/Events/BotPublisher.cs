@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using MyBot.Telegram;
 
+[assembly: InternalsVisibleTo("MyBot.xUnit.Tests")]
+
 namespace MyBot.Events
 {
-    public class BotPublisher
+    public class BotPublisher : IBotPublisher
     {
         public event EventHandler<BotEventArgs> BotEvent = null;
 
-        public async Task RunBot()
+        public async void RunBot()
         {
             var api = new TelegramApi();
             while (true)
@@ -28,7 +31,7 @@ namespace MyBot.Events
             }
         }
 
-        public void OnRaiseBotEvent(BotEventArgs botEventArgs)
+        internal void OnRaiseBotEvent(BotEventArgs botEventArgs)
         {
             BotEvent?.Invoke(this, botEventArgs);
         }
